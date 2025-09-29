@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
-use std::vec::*;
+use std::{clone, vec::*};
 
 #[derive(Debug)]
 struct Node<T> {
@@ -29,13 +29,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: std::cmp::Ord + std::cmp::Eq + Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: std::cmp::Ord + std::cmp::Eq + Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -71,13 +71,33 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		// TODO
+        let mut a_ptr_end = list_a.end.unwrap();
+        unsafe {
+            
+            a_ptr_end.as_mut().next = list_b.start;
         }
+		let mut ans = Self {
+            length: list_a.length + list_b.length,
+            start: list_a.start,
+            end: list_b.end,
+        };
+        ans = ans.sort();
+        ans
 	}
+    
+    fn sort(&mut self) -> Self {
+        let mut v = vec![];
+        for i in 0..self.length {
+            v.push(self.get(i as i32).unwrap().clone());
+        }
+        v.sort();
+        let mut new_list = LinkedList::new();
+        for i in 0..self.length {
+            new_list.add(v[i as usize].clone());
+        }
+        new_list
+    }
 }
 
 impl<T> Display for LinkedList<T>

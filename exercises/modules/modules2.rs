@@ -7,23 +7,26 @@
 // Execute `rustlings hint modules2` or use the `hint` watch subcommand for a
 // hint.
 
-mod delicious_snacks {
+// I AM NOT DONE
+
+pub mod delicious_snacks {
     // TODO: Fix these use statements
     pub use self::fruits::PEAR as fruit;
     pub use self::veggies::CUCUMBER as veggie;
 
-    mod fruits {
+    pub mod fruits {
         pub const PEAR: &'static str = "Pear";
         pub const APPLE: &'static str = "Apple";
     }
 
-    mod veggies {
+    pub mod veggies {
         pub const CUCUMBER: &'static str = "Cucumber";
         pub const CARROT: &'static str = "Carrot";
     }
 }
 
 fn main() {
+    use crate::delicious_snacks::fruits::*;
     println!(
         "favorite snacks: {} and {}",
         delicious_snacks::fruit,

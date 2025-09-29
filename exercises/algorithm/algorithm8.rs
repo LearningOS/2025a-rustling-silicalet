@@ -9,7 +9,7 @@ pub struct Queue<T> {
     elements: Vec<T>,
 }
 
-impl<T> Queue<T> {
+impl<T: Clone> Queue<T> {
     pub fn new() -> Queue<T> {
         Queue {
             elements: Vec::new(),
@@ -52,13 +52,14 @@ impl<T> Default for Queue<T> {
     }
 }
 
+#[allow(non_snake_case, non_camel_case_types)]
 pub struct myStack<T>
 {
 	//TODO
 	q1:Queue<T>,
 	q2:Queue<T>
 }
-impl<T> myStack<T> {
+impl<T: Clone> myStack<T> {
     pub fn new() -> Self {
         Self {
 			//TODO
@@ -68,14 +69,28 @@ impl<T> myStack<T> {
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+		self.q1.enqueue(elem);
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+		if self.q1.is_empty() {
+			return Err("Stack is empty");
+		} else {
+			while self.q1.size() > 1 {
+				self.q2.enqueue(self.q1.dequeue().unwrap());
+			}
+			let result = self.q1.dequeue().unwrap().clone();
+			while self.q2.size() > 0 {
+				self.q1.enqueue(self.q2.dequeue().unwrap());
+			}
+			Ok(result)
+		}
+        
+		// Err("Stack is empty")
     }
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+		self.q1.is_empty() && self.q2.is_empty()
     }
 }
 

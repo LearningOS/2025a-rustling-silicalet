@@ -31,13 +31,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -72,8 +72,18 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn reverse(&mut self){
+	pub fn reverse(&mut self) {
 		// TODO
+        let mut v = vec![];
+        for i in 0..self.length {
+            v.push(self.get(i as i32).unwrap().clone());
+        }
+        v.reverse();
+        let mut new = LinkedList::new();
+        for i in 0..self.length {
+            new.add(v[i as usize].clone());
+        }
+        *self = new;
 	}
 }
 
